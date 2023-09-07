@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulXORDecode", "DonderfulXORDecode\DonderfulXORDecode.csproj", "{A7614DA5-2D9E-4950-A034-48057237745B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulUtils", "DonderfulUtils\DonderfulUtils.csproj", "{DDF5B56D-7F37-4A0D-A9C0-CFF67F3819E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulMPInject", "DonderfulMPInject\DonderfulMPInject.csproj", "{5CA3C564-8A53-469A-800D-85B18258CB7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulJSONExtractor", "DonderfulJSONExtractor\DonderfulJSONExtractor.csproj", "{FF620AA1-FDBF-4A30-9642-3285FDC37E7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulMPExtractor", "DonderfulMPExtractor\DonderfulMPExtractor.csproj", "{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonderfulUltramixUpdater", "DonderfulUltramixUpdater\DonderfulUltramixUpdater.csproj", "{078615EB-9A91-497A-81A0-6008C6735604}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7614DA5-2D9E-4950-A034-48057237745B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7614DA5-2D9E-4950-A034-48057237745B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7614DA5-2D9E-4950-A034-48057237745B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7614DA5-2D9E-4950-A034-48057237745B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDF5B56D-7F37-4A0D-A9C0-CFF67F3819E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF5B56D-7F37-4A0D-A9C0-CFF67F3819E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF5B56D-7F37-4A0D-A9C0-CFF67F3819E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF5B56D-7F37-4A0D-A9C0-CFF67F3819E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CA3C564-8A53-469A-800D-85B18258CB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CA3C564-8A53-469A-800D-85B18258CB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CA3C564-8A53-469A-800D-85B18258CB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CA3C564-8A53-469A-800D-85B18258CB7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF620AA1-FDBF-4A30-9642-3285FDC37E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF620AA1-FDBF-4A30-9642-3285FDC37E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF620AA1-FDBF-4A30-9642-3285FDC37E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF620AA1-FDBF-4A30-9642-3285FDC37E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{078615EB-9A91-497A-81A0-6008C6735604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{078615EB-9A91-497A-81A0-6008C6735604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{078615EB-9A91-497A-81A0-6008C6735604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{078615EB-9A91-497A-81A0-6008C6735604}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D18C3CD3-8620-4A24-A117-5642BDE5FC02}
+	EndGlobalSection
+EndGlobal
