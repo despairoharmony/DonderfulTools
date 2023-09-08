@@ -44,7 +44,7 @@ if (args.Length > 0)
 }
 else
 {
-    Console.WriteLine("This will XOR'd (and decode Base64 from .bin) from any file of Taiko no Tatsujin: Donderful Festival.\nJust drag and drop the file into the exe.");
+    Console.WriteLine("This will decode the .unity3d file from 'assetbundlestreamingassets' into a .json,\nAnd also inject the modfied .json into the .unity3d of origin.\nThis tool is meant for Taiko no Tatsujin: Donderful Festival.\nJust drag and drop the file into the exe.");
     Console.ReadLine();
 }
 

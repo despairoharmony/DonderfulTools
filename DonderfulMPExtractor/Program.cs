@@ -3,7 +3,7 @@ using System.Buffers.Text;
 using System.Xml.Linq;
 using DonderfulUtils.Service;
 
-Console.WriteLine("Donderful JSON Extractor.\nDeveloped by Kamui (DespairOfHarmony)\n");
+Console.WriteLine("Donderful Music Pass Extractor.\nDeveloped by Kamui (DespairOfHarmony)\n");
 
 if (args.Length > 0)
 {
@@ -24,7 +24,7 @@ if (args.Length > 0)
 }
 else
 {
-    Console.WriteLine("This will XOR'd (and decode Base64 from .bin) from any file of Taiko no Tatsujin: Donderful Festival.\nJust drag and drop the file into the exe.");
+    Console.WriteLine("This will extract Music Pass Cache Data from Taiko no Tatsujin: Donderful Festival into a LayeredFS format.\nJust drag and drop the file into the exe.");
     Console.ReadLine();
 }
 

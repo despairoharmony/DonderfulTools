@@ -1,8 +1,7 @@
 {
   "profiles": {
     "DonderfulMPExtractor": {
-      "commandName": "Project",
-      "commandLineArgs": "__data"
+      "commandName": "Project"
     }
   }
 }
