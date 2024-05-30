@@ -32,5 +32,10 @@ namespace DonderfulUtils.Model
         public string playable_region_list { get; set; }
         public string subscription_region_list { get; set; }
         public string dlc_region_list { get; set; }
+        public decimal calorie_e {  get; set; }
+        public decimal calorie_n { get; set; }
+        public decimal calorie_e_1furi { get; set; }
+        public decimal calorie_n_1furi { get; set; }
+        public string dancerSet { get; set; }
     }
 }

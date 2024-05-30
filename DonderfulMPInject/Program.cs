@@ -2,6 +2,7 @@
 using DonderfulMPInject.Inject;
 using System.Text.Json;
 using DonderfulUtils.Service;
+using System.Xml.Linq;
 
 Console.WriteLine("Donderful Music Pass Inject\nDeveloped by Kamui (DespairOfHarmony)\nPlace \"MySaveData\" at the same folder of this executable.\nYou can place \"songdata.unity3d\",\"musicdata.unity3d\" and \"worddata.unity3d\" in the same folder and this program\nwill inject the data from \"MySaveData\"\n");
 Console.WriteLine("Press any key to continue.\n");
@@ -92,6 +93,12 @@ try
         else
         {
             Console.WriteLine("File not found: worddata.unity3d\n");
+        }
+        if (isSaveData)
+        {
+
+            string passjson = JsonSerializer.Serialize<SaveData>(musicpass, opt);
+            File.WriteAllText(@"output\savedata.json", passjson);
         }
 
         Directory.Delete("temp", true);

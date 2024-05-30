@@ -13,7 +13,12 @@ namespace DonderfulUtils.Model
         public string InPackage { get; set; }
         public string PreviewInPackage { get; set; }
         public string SongFileName { get; set; }
+        public string calorie_e { get; set; }
+        public string calorie_n { get; set; }
+        public string calorie_e_1furi { get; set; }
+        public string calorie_n_1furi { get; set; }
         public string Reserve2 { get; set; }
         public string Reserve3 { get; set; }
+        public string DancerSet { get; set; }
     }
 }

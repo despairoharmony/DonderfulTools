@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using DonderfulUtils.Model;
@@ -31,6 +32,13 @@ namespace DonderfulMPInject.Inject
             input.playable_region_list = "1,2,3";
             input.subscription_region_list = "1,2,3";
             input.dlc_region_list = "1,2,3";
+            // Update 3.0.1 new fields -> fitness mode
+            input.calorie_e = decimal.Parse(extra.calorie_e, CultureInfo.InvariantCulture);
+            input.calorie_n = decimal.Parse(extra.calorie_n, CultureInfo.InvariantCulture);
+            input.calorie_e_1furi = decimal.Parse(extra.calorie_e_1furi, CultureInfo.InvariantCulture);
+            input.calorie_n_1furi = decimal.Parse(extra.calorie_n_1furi, CultureInfo.InvariantCulture);
+            //Update 3.2.0 new field - > dancer set
+            input.dancerSet = extra.DancerSet;
 
             return input;
         }
