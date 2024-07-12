@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulJSONExtractor", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulMPExtractor", "DonderfulMPExtractor\DonderfulMPExtractor.csproj", "{82C8FBDE-86B0-4F7A-A4E9-0E71A90FCA95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonderfulUltramixUpdater", "DonderfulUltramixUpdater\DonderfulUltramixUpdater.csproj", "{078615EB-9A91-497A-81A0-6008C6735604}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulUltramixUpdater", "DonderfulUltramixUpdater\DonderfulUltramixUpdater.csproj", "{078615EB-9A91-497A-81A0-6008C6735604}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonderfulCSVGenerator", "DonderfulCSVGenerator\DonderfulCSVGenerator.csproj", "{15BA9E29-CDB6-466B-B978-A038627A230C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonderfulCacheGenerator", "DonderfulCacheGenerator\DonderfulCacheGenerator.csproj", "{F13A5864-C695-42F8-A2EF-9282A3EB98AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{078615EB-9A91-497A-81A0-6008C6735604}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{078615EB-9A91-497A-81A0-6008C6735604}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{078615EB-9A91-497A-81A0-6008C6735604}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BA9E29-CDB6-466B-B978-A038627A230C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BA9E29-CDB6-466B-B978-A038627A230C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BA9E29-CDB6-466B-B978-A038627A230C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BA9E29-CDB6-466B-B978-A038627A230C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13A5864-C695-42F8-A2EF-9282A3EB98AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13A5864-C695-42F8-A2EF-9282A3EB98AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13A5864-C695-42F8-A2EF-9282A3EB98AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13A5864-C695-42F8-A2EF-9282A3EB98AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

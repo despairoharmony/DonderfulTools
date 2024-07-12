@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -12,8 +13,13 @@ namespace DonderfulUltramixUpdater.Inject
     {
         private static SongItens Update(this SongItens input, SongItens refresh)
         {
+            input.uniqueId = refresh.uniqueId;
             input.previewPos = refresh.previewPos;
             input.fumenOffsetPos = refresh.fumenOffsetPos;
+            input.calorie_e = refresh.calorie_e;
+            input.calorie_n = refresh.calorie_n;
+            input.calorie_e_1furi = refresh.calorie_e_1furi;
+            input.calorie_n_1furi = refresh.calorie_n_1furi;
 
             return input;
         }
@@ -39,7 +45,12 @@ namespace DonderfulUltramixUpdater.Inject
                 fumenOffsetPos = 0,
                 playable_region_list = "1,2,3",
                 subscription_region_list = "1,2,3",
-                dlc_region_list = "1,2,3"
+                dlc_region_list = "1,2,3",
+                // Update 3.0.1 new fields -> fitness mode
+                calorie_e = refresh.calorie_e,
+                calorie_n = refresh.calorie_n,
+                calorie_e_1furi = refresh.calorie_e_1furi,
+                calorie_n_1furi = refresh.calorie_n_1furi
             };
 
             return input;
@@ -61,8 +72,8 @@ namespace DonderfulUltramixUpdater.Inject
                 }
                 if (isNew)
                 {
-                    while (input.CheckUniqueId(item.uniqueId))
-                        item.uniqueId = item.uniqueId + 3000;
+                    //while (input.CheckUniqueId(item.uniqueId))
+                    //    item.uniqueId = item.uniqueId + 3000;
                     SongItens shin = Add(item);
                     input.items.Add(shin);
                 }

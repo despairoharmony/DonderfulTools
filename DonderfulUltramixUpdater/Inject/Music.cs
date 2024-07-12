@@ -11,6 +11,7 @@ namespace DonderfulUltramixUpdater.Inject
     {
         private static MusicItens Update(this MusicItens input, MusicItens refresh)
         {
+            input.uniqueId = refresh.uniqueId;
             //input.order = refresh.order;
             input.genreNo = refresh.genreNo;
 
@@ -108,8 +109,8 @@ namespace DonderfulUltramixUpdater.Inject
                 }
                 if (isNew)
                 {
-                    while (input.CheckUniqueId(item.uniqueId))
-                        item.uniqueId = item.uniqueId + 3000;
+                    //while (input.CheckUniqueId(item.uniqueId))
+                    //    item.uniqueId = item.uniqueId + 3000;
                     item.order = 9999;
                     item.songFileName = item.songFileName.Replace("NS2DLC/", "").Replace("fromOther/", "").Replace("fromPS4/", "").Replace("fromV12/", "").Replace("fromNS1/", "");
                     input.items.Add(item);
