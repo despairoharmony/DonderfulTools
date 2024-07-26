@@ -1,7 +1,8 @@
 {
   "profiles": {
     "DonderfulMPExtractor": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "1009_swtaiko_001"
     }
   }
 }

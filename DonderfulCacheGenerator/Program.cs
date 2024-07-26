@@ -21,19 +21,21 @@ try
 
     string path = Console.ReadLine();
 
-    bool isMusic = File.Exists("musicdata.json");
-    bool isSong = File.Exists("songdata.json");
+    bool isMusic = File.Exists(path + "\\Data\\StreamingAssets\\assetbundlestreamingassets\\readassets\\musicdata.unity3d");
+    bool isSong = File.Exists(path + "\\Data\\StreamingAssets\\assetbundlestreamingassets\\readassets\\songdata.unity3d");
     bool isFolder = Directory.Exists(path + "\\Data\\StreamingAssets");
 
     if (isMusic && isSong && isFolder)
     {
-        Console.WriteLine("Loading: songdata.json");
-        string songdatajson = File.ReadAllText("songdata.json");
-        SongData song = JsonSerializer.Deserialize<SongData>(songdatajson);
+        Console.WriteLine("Loading: songdata.unity3d");
+        File.Copy(path + "\\Data\\StreamingAssets\\assetbundlestreamingassets\\readassets\\songdata.unity3d", "songdata.unity3d");
+        string songdatajson = Unity3D.ExtractJSONData("songdata");
+        SongData songs = JsonSerializer.Deserialize<SongData>(songdatajson);
 
-        Console.WriteLine("Loading: musicdata.json");
-        string musicjson = File.ReadAllText("musicdata.json");
-        MusicData music = JsonSerializer.Deserialize<MusicData>(musicjson);
+        Console.WriteLine("Loading: musicdata.unity3d");
+        File.Copy(path + "\\Data\\StreamingAssets\\assetbundlestreamingassets\\readassets\\musicdata.unity3d", "musicdata.unity3d");
+        string musicdatajson = Unity3D.ExtractJSONData("musicdata");
+        MusicData music = JsonSerializer.Deserialize<MusicData>(musicdatajson);
 
         foreach (var item in music.items)
         {
@@ -45,27 +47,29 @@ try
             {
                 Unity3D.CreateMPData(item, path);
 
-                for (int i = 0; i < song.items.Count; i++)
+                for (int i = 0; i < songs.items.Count; i++)
                 {
-                    if (song.items[i].uniqueId == item.uniqueId)
+                    if (songs.items[i].uniqueId == item.uniqueId)
                     {
-                        song.items[i].DLC = "HkX8sA53LnJi"; // Activate with "World is Mine" DLC
-                        song.items[i].HasInPackage = "2";
-                        song.items[i].Reserve3 = ""; // Update 1.3.0 set Reserve 3 as DLC key
-                        song.items[i].playable_region_list = "1,2,3";
-                        song.items[i].subscription_region_list = "1,2,3";
-                        song.items[i].dlc_region_list = "1,2,3";
+                        songs.items[i].DLC = "HkX8sA53LnJi"; // Activate with "World is Mine" DLC
+                        songs.items[i].HasInPackage = "2";
+                        songs.items[i].Reserve3 = ""; // Update 1.3.0 set Reserve 3 as DLC key
+                        songs.items[i].playable_region_list = "1,2,3";
+                        songs.items[i].subscription_region_list = "1,2,3";
+                        songs.items[i].dlc_region_list = "1,2,3";
                     }
                 }
             }
         }
 
-        Console.WriteLine(@"Saving: output\songdata.json");
-        songdatajson = JsonSerializer.Serialize<SongData>(song, opt);
-        File.WriteAllText(@"output\songdata.json", songdatajson);
+        songdatajson = JsonSerializer.Serialize<SongData>(songs, opt);
+        Unity3D.WriteJSONData("songdata", songdatajson);
+        Console.WriteLine(@"DLC Injection done, file saved at: output\songdata.unity3d" + "\n");
     }
 
     Directory.Delete("temp", true);
+    File.Delete("songdata.unity3d");
+    File.Delete("musicdata.unity3d");
 } catch (Exception ex)
 {
     Console.WriteLine("Unknown error:\n" + ex);

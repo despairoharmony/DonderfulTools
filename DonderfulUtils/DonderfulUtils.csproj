@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="AssetsTools.NET" Version="3.0.0" />
-    <PackageReference Include="VGAudio" Version="2.2.1" />
   </ItemGroup>
 
 </Project>

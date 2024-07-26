@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -111,6 +112,15 @@ namespace DonderfulUtils.Service
         private static void GetDecodedFile(string filename)
         {
             byte[] fullfile = File.ReadAllBytes(filename + ".unity3d");
+
+            var fileinfo = new FileInfo(@"temp\" + filename + ".unity3d");
+
+            if (!fileinfo.Exists)
+            {
+                //Create directory if it doesn't exist
+                Directory.CreateDirectory(fileinfo.Directory.FullName);
+            }
+
             if (XOR.ValidateEncr(fullfile))
             {
                 (byte[] key, byte[] decfile) = Key.Get(fullfile);
@@ -134,7 +144,7 @@ namespace DonderfulUtils.Service
             }
             else
             {
-                File.Copy(filename, @"temp\" + filename);
+                File.Copy(filename, @"temp\" + filename, overwrite: true);
             }
         }
 
@@ -147,9 +157,28 @@ namespace DonderfulUtils.Service
             var asset = am.LoadAssetsFileFromBundle(bundle, 0, true);
             var afile = asset.file;
 
+            List<string> paths = new List<string>();
+
+            foreach (var assetInfo in afile.GetAssetsOfType(AssetClassID.AssetBundle))
+            {
+                var assetBase = am.GetBaseField(asset, assetInfo);
+                var containerBase = assetBase["m_Container.Array"].ToArray();
+                foreach (var container in containerBase)
+                {
+                    string path = container["first"].AsString;
+                    path = Regex.Replace(path, "assets/assetbundleassets", string.Empty);
+                    path = Regex.Replace(path, "\\/[^\\/]+\\.bytes", string.Empty);
+                    path = Regex.Replace(path, "/", @"\");
+
+                    paths.Add(path);
+                }
+
+            }
+
             foreach (var texInfo in afile.GetAssetsOfType(AssetClassID.TextAsset))
             {
                 string outname;
+                string pathout;
 
                 var texBase = am.GetBaseField(asset, texInfo);
                 var m_Name = texBase["m_Name"].AsString;
@@ -157,26 +186,29 @@ namespace DonderfulUtils.Service
 
                 if (m_Name.ToLower().Contains("psong_"))
                 {
+                    pathout = @"output" + paths.Find(x => x.Contains("presong"));
                     m_Name = Regex.Replace(m_Name.ToUpper(), "_ACB", string.Empty);
-                    Directory.CreateDirectory(@"output\presong");
-                    outname = @"output\presong\" + m_Name + ".acb";
+                    Directory.CreateDirectory(pathout);
+                    outname = pathout + @"\" + m_Name + ".acb";
                 }
                 else if (m_Name.ToLower().Contains("song_"))
                 {
+                    pathout = @"output" + paths.Find(x => x.Contains("song"));
                     m_Name = Regex.Replace(m_Name.ToUpper(), "_ACB", string.Empty);
-                    Directory.CreateDirectory(@"output\song");
-                    outname = @"output\song\" + m_Name + ".acb";
+                    Directory.CreateDirectory(pathout);
+                    outname = pathout + @"\" + m_Name + ".acb";
                 }
                 else if (m_Name.ToLower().Contains("_e") || m_Name.ToLower().Contains("_n") || m_Name.ToLower().Contains("_h") || m_Name.ToLower().Contains("_m") || m_Name.ToLower().Contains("_x"))
                 {
-                    string id_name = m_Name.Split("_").First();
-                    Directory.CreateDirectory(@"output\fumen\" + id_name);
-                    outname = @"output\fumen\" + id_name + @"\" + m_Name + ".bin";
+                    pathout = @"output" + paths.Find(x => x.Contains("fumen"));
+                    Directory.CreateDirectory(pathout);
+                    outname = pathout + @"\" + m_Name + ".bin";
                 }
                 else
                 {
-                    Directory.CreateDirectory(@"output\csv");
-                    outname = @"output\csv\" + m_Name + ".csv";
+                    pathout = @"output" + paths.Find(x => x.Contains("csv"));
+                    Directory.CreateDirectory(pathout);
+                    outname = pathout + @"\" + m_Name + ".csv";
                 }
 
 
@@ -274,6 +306,123 @@ namespace DonderfulUtils.Service
             am.UnloadAll();
 
             CompressCache(filename);
+
+            Console.WriteLine("Done!");
+        }
+        
+        public static void CreateCostumeAsset(string path, string nameog, string namenew, bool isTexture) 
+        {
+            Console.WriteLine("Generating: " + path + namenew + ".unity3d");
+
+            GetDecodedFile(path + nameog);
+
+            var am = new AssetsManager();
+
+            var bundle = am.LoadBundleFile(@"temp\" + path + nameog + ".unity3d");
+            var bunfile = bundle.file;
+            var asset = am.LoadAssetsFileFromBundle(bundle, 0, true);
+            var afile = asset.file;
+
+            foreach (var assetInfo in afile.GetAssetsOfType(AssetClassID.AssetBundle))
+            {
+                var assetBase = am.GetBaseField(asset, assetInfo);
+                var containerBase = assetBase["m_Container.Array"].ToArray();
+                foreach (var container in containerBase)
+                {
+                    container["first"].AsString = Regex.Replace(container["first"].AsString, nameog, namenew);
+                }
+
+                assetBase["m_Name"].AsString = Regex.Replace(assetBase["m_Name"].AsString, nameog, namenew);
+                assetBase["m_AssetBundleName"].AsString = Regex.Replace(assetBase["m_AssetBundleName"].AsString, nameog, namenew);
+
+                assetInfo.SetNewData(assetBase);
+            }
+
+            foreach (var SpriteAtlasInfo in afile.GetAssetsOfType(AssetClassID.SpriteAtlas))
+            {
+                var SpriteAtlasBase = am.GetBaseField(asset, SpriteAtlasInfo);
+                var PackedSpriteBase = SpriteAtlasBase["m_PackedSpriteNamesToIndex.Array"].ToArray();
+                foreach (var PackedSprite in PackedSpriteBase)
+                {
+                    PackedSprite.AsString = Regex.Replace(PackedSprite.AsString, nameog, namenew);
+                }
+
+                SpriteAtlasBase["m_Name"].AsString = Regex.Replace(SpriteAtlasBase["m_Name"].AsString, nameog, namenew);
+                SpriteAtlasBase["m_Tag"].AsString = Regex.Replace(SpriteAtlasBase["m_Tag"].AsString, nameog, namenew);
+
+                SpriteAtlasInfo.SetNewData(SpriteAtlasBase);
+            }
+
+            foreach (var SpriteInfo in afile.GetAssetsOfType(AssetClassID.Sprite))
+            {
+                var SpriteBase = am.GetBaseField(asset, SpriteInfo);
+                var AtlasTagsBase = SpriteBase["m_AtlasTags.Array"].ToArray();
+                foreach (var AtlasTags in AtlasTagsBase)
+                {
+                    AtlasTags.AsString = Regex.Replace(AtlasTags.AsString, nameog, namenew);
+                }
+
+                if (isTexture)
+                {
+                    Guid uuid_map = Guid.NewGuid();
+                    var uuid_map_byte = uuid_map.ToByteArray();
+
+                    var RenderDataKeyBase = SpriteBase["m_RenderDataKey.first"].ToArray();
+                    uint[] guidstore = new uint[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        RenderDataKeyBase[i].AsUInt = BitConverter.ToUInt32(uuid_map_byte, i * 4);
+                        guidstore[i] = RenderDataKeyBase[i].AsUInt;
+                    }
+                    var opt = new JsonSerializerOptions();
+                    opt.WriteIndented = true;
+                    opt.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                    string export = JsonSerializer.Serialize<object>(guidstore, opt);
+                    File.WriteAllText(@"output\" + namenew + ".json", export);
+                }
+
+                SpriteBase["m_Name"].AsString = Regex.Replace(SpriteBase["m_Name"].AsString, nameog, namenew);
+
+                SpriteInfo.SetNewData(SpriteBase);
+            }
+
+            foreach (var Texture2DInfo in afile.GetAssetsOfType(AssetClassID.Texture2D))
+            {
+                var Texture2DBase = am.GetBaseField(asset, Texture2DInfo);
+                Texture2DBase["m_Name"].AsString = Regex.Replace(Texture2DBase["m_Name"].AsString, nameog, namenew);
+                Texture2DInfo.SetNewData(Texture2DBase);
+            }
+
+            foreach (var MonoBehaviourInfo in afile.GetAssetsOfType(AssetClassID.MonoBehaviour))
+            {
+                var MonoBehaviourBase = am.GetBaseField(asset, MonoBehaviourInfo);
+                MonoBehaviourBase["m_Name"].AsString = Regex.Replace(MonoBehaviourBase["m_Name"].AsString, nameog, namenew);
+                MonoBehaviourInfo.SetNewData(MonoBehaviourBase);
+            }
+
+            Guid uuid = Guid.NewGuid();
+            string uuidtext = uuid.ToString();
+            uuidtext = Regex.Replace(uuidtext, "-", string.Empty);
+
+            bunfile.BlockAndDirInfo.DirectoryInfos[0].SetNewData(afile);
+            bunfile.BlockAndDirInfo.DirectoryInfos[0].Name = "CAB-" + uuidtext;
+
+            var fileinfo = new FileInfo(@"output\" + path + namenew + "_unc.unity3d");
+
+            if (!fileinfo.Exists)
+            {
+                //Create directory if it doesn't exist
+                Directory.CreateDirectory(fileinfo.Directory.FullName);
+            }
+
+            using (AssetsFileWriter writer = new AssetsFileWriter(@"output\" + path + namenew + "_unc.unity3d"))
+            {
+                bunfile.Write(writer);
+            }
+
+            am.UnloadAll();
+
+            CompressBundle(path + namenew);
 
             Console.WriteLine("Done!");
         }
