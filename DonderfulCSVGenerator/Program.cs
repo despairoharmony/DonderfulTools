@@ -2,7 +2,7 @@
 using DonderfulUtils.Model;
 using System.Text.Json;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Donderful (Shitty) CSV Generator");
 
 try
 {

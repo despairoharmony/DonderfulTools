@@ -56,21 +56,18 @@ namespace DonderfulUltramixUpdater.Inject
             foreach (var item in refresh.items)
             {
                 bool isNew = true;
-                if(item.key.Contains("song_") && !item.key.Contains("song_small") && !item.key.Contains("song_sort") && !item.key.Contains("song_japan") && !item.englishUsText.ToLower().Contains("now printing"))
+                for (int i = 0; i < input.items.Count; i++)
                 {
-                    for (int i = 0; i < input.items.Count; i++)
+                    if (input.items[i].key == item.key)
                     {
-                        if (input.items[i].key == item.key)
-                        {
-                            isNew = false;
-                            input.items[i] = input.items[i].Update(item);
-                            break;
-                        }
+                        isNew = false;
+                        input.items[i] = input.items[i].Update(item);
+                        break;
                     }
-                    if (isNew)
-                    {
-                        input.items.Add(item);
-                    }
+                }
+                if (isNew)
+                {
+                    input.items.Add(item);
                 }
             }
 

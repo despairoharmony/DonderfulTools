@@ -12,6 +12,7 @@ namespace DonderfulUltramixUpdater.Inject
         private static MusicItens Update(this MusicItens input, MusicItens refresh)
         {
             input.uniqueId = refresh.uniqueId;
+            input.songFileName = refresh.songFileName;
             //input.order = refresh.order;
             input.genreNo = refresh.genreNo;
 
@@ -109,10 +110,6 @@ namespace DonderfulUltramixUpdater.Inject
                 }
                 if (isNew)
                 {
-                    //while (input.CheckUniqueId(item.uniqueId))
-                    //    item.uniqueId = item.uniqueId + 3000;
-                    item.order = 9999;
-                    item.songFileName = item.songFileName.Replace("NS2DLC/", "").Replace("fromOther/", "").Replace("fromPS4/", "").Replace("fromV12/", "").Replace("fromNS1/", "");
                     input.items.Add(item);
                 }
             }
@@ -156,18 +153,6 @@ namespace DonderfulUltramixUpdater.Inject
             }
 
             return input;
-        }
-
-        private static bool CheckUniqueId(this MusicData input, int id)
-        {
-            foreach(var item in input.items)
-            {
-                if (item.uniqueId == id)
-                {
-                    return true;
-                }
-            }
-            return false; 
         }
     }
 }

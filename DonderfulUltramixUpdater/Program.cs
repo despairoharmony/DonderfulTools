@@ -1,9 +1,11 @@
 ﻿using DonderfulUltramixUpdater.Inject;
 using DonderfulUtils.Model;
+using DonderfulUtils.Service;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Donderful Ultramix Updater\nDeveloped by Kamui (DespairOfHarmony)\nSpecial thanks: swigz\n");
+
 
 try
 {
@@ -12,151 +14,152 @@ try
     opt.WriteIndented = true;
     opt.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
 
-    //Music
-    bool isMusic_OG = File.Exists("musicdata_og.json");
-    bool isMusic_AC15 = File.Exists("musicdata_AC15.json");
-    bool isMusic_PS4 = File.Exists("musicinfo_ps4.json");
-    bool isMusic_PTB = File.Exists("musicinfo_ptb.json");
-    bool isMusic_NS1 = File.Exists("musicinfo_ns1.json");
-    bool isMusic_MP = File.Exists("musicdata_mp.json");
+    Console.WriteLine("Options Avaiable: ");
+    Console.WriteLine("1 - Extract worddata from Ultramix");
+    Console.WriteLine("2 - Inject musicdata to Ultramix");
+    Console.WriteLine("3 - Inject songdata to Ultramix");
+    Console.WriteLine("4 - Inject worddata to Ultramix");
 
-    if (isMusic_OG)
+    Console.Write("Choose a option: ");
+    string type = Console.ReadLine();
+
+    if (type == "1")
     {
-        MusicData music = new();
-        string musicjson;
+        Console.WriteLine("Write the worddata.json path: ");
+        string wordpath = Console.ReadLine();
+        wordpath = wordpath.Replace("\"", "");
+        string wordjson = File.ReadAllText(wordpath);
+        WordData word = JsonSerializer.Deserialize<WordData>(wordjson);
 
-        string music_ogjson = File.ReadAllText("musicdata_og.json");
-        var music_og = JsonSerializer.Deserialize<MusicData>(music_ogjson);
-        music = music_og;
+        WordData newword = new();
+        newword.items = new();
 
-        if (isMusic_AC15)
+        WordItens versionkey = word.items.FirstOrDefault(k => k.key == "title_version_number");
+        newword.items.Add(versionkey);
+
+        Console.WriteLine("Write the musicdata.json path: ");
+        string musicpath = Console.ReadLine();
+        if (!string.IsNullOrEmpty(musicpath))
         {
-            string music_ac15son = File.ReadAllText("musicdata_AC15.json");
-            var music_ac15 = JsonSerializer.Deserialize<MusicData>(music_ac15son);
+            musicpath = musicpath.Replace("\"", "");
+            string musicjson = File.ReadAllText(musicpath);
+            MusicData music = JsonSerializer.Deserialize<MusicData>(musicjson);
 
-            music = music.InjectShinUti_AC(music_ac15);
-        }
-        if (isMusic_PS4)
-        {
-            string music_ps4json = File.ReadAllText("musicinfo_ps4.json");
-            var music_ps4 = JsonSerializer.Deserialize<MusicData>(music_ps4json);
+            foreach (var item in music.items)
+            {
+                string[] keywords = {
+                    "song_" + item.id,
+                    "song_sub_" + item.id,
+                    "song_detail_" + item.id,
+                };
 
-            music = music.InjectShinUti(music_ps4);
-        }
-        if (isMusic_PTB)
-        {
-            string music_ptbjson = File.ReadAllText("musicinfo_ptb.json");
-            var music_ptb = JsonSerializer.Deserialize<MusicData>(music_ptbjson);
-
-            music = music.InjectShinUti(music_ptb);
-        }
-        if (isMusic_NS1)
-        {
-            string music_ns1json = File.ReadAllText("musicinfo_ns1.json");
-            var music_ns1 = JsonSerializer.Deserialize<MusicData>(music_ns1json);
-
-            music = music.InjectShinUti(music_ns1);
-        }
-
-        if (isMusic_MP)
-        {
-            string music_mpjson = File.ReadAllText("musicdata_mp.json");
-            var music_mp = JsonSerializer.Deserialize<MusicData>(music_mpjson);
-
-            music = music.Inject(music_mp);
+                foreach (string key in keywords)
+                {
+                    WordItens newitem = word.items.FirstOrDefault(k => k.key == key);
+                    if (newitem != null)
+                        newword.items.Add(newitem);
+                }
+            }
         }
 
+        Console.WriteLine("Write the acc.json path: ");
+        string accpath = Console.ReadLine();
+        if (!string.IsNullOrEmpty(accpath))
+        {
+            accpath = accpath.Replace("\"", "");
+            string accjson = File.ReadAllText(accpath);
+            AccData acc = JsonSerializer.Deserialize<AccData>(accjson);
+
+            foreach (var item in acc.items)
+            {
+                string[] keywords = {
+                    item.nameKey,
+                    item.descriptionKey
+                };
+
+                foreach (string key in keywords)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        WordItens newitem = word.items.FirstOrDefault(k => k.key == key);
+                        if (newitem != null)
+                            newword.items.Add(newitem);
+                    }
+                }
+            }
+        }
+
+        string newwordjson = JsonSerializer.Serialize<WordData>(newword, opt);
+        File.WriteAllText(@"output\worddata_extract.json", newwordjson);
+    }
+    else if (type == "2")
+    {
+        Console.WriteLine("Write the input (OG) musicdata.json path: ");
+        string musicpath = Console.ReadLine();
+        musicpath = musicpath.Replace("\"", "");
+        string musicjson = File.ReadAllText(musicpath);
+        MusicData music = JsonSerializer.Deserialize<MusicData>(musicjson);
+
+        Console.WriteLine("Write the refresh (MP) musicdata.json path: ");
+        string musicpath_new = Console.ReadLine();
+        musicpath_new = musicpath_new.Replace("\"", "");
+        string musicjson_new = File.ReadAllText(musicpath_new);
+        MusicData music_new = JsonSerializer.Deserialize<MusicData>(musicjson_new);
+
+        music = music.Inject(music_new);
         music.items = music.items.OrderBy(x => x.uniqueId).ToList();
-        musicjson = JsonSerializer.Serialize<MusicData>(music, opt);
-        File.WriteAllText(@"output\musicdata.json", musicjson);
+
+        string newmusicjson = JsonSerializer.Serialize<MusicData>(music, opt);
+        File.WriteAllText(@"output\musicdata.json", newmusicjson);
     }
-    //Song
-    bool isSong_OG = File.Exists("songdata_og.json");
-    bool isSong_MP = File.Exists("songdata_mp.json");
-
-    if (isMusic_OG)
+    else if (type == "3")
     {
-        SongData song = new();
-        string songjson;
+        Console.WriteLine("Write the input (OG) songdata.json path: ");
+        string songpath = Console.ReadLine();
+        songpath = songpath.Replace("\"", "");
+        string songjson = File.ReadAllText(songpath);
+        SongData song = JsonSerializer.Deserialize<SongData>(songjson);
 
-        string song_ogjson = File.ReadAllText("songdata_og.json");
-        var song_og = JsonSerializer.Deserialize<SongData>(song_ogjson);
-        song = song_og;
+        Console.WriteLine("Write the refresh (MP) songdata.json path: ");
+        string songpath_new = Console.ReadLine();
+        songpath_new = songpath_new.Replace("\"", "");
+        string songjson_new = File.ReadAllText(songpath_new);
+        SongData song_new = JsonSerializer.Deserialize<SongData>(songjson_new);
 
-        if (isMusic_MP)
-        {
-            string song_mpjson = File.ReadAllText("songdata_mp.json");
-            var song_mp = JsonSerializer.Deserialize<SongData>(song_mpjson);
-
-            song = song.Inject(song_mp);
-        }
-
+        song = song.Inject(song_new);
         song.items = song.items.OrderBy(x => x.uniqueId).ToList();
-        songjson = JsonSerializer.Serialize<SongData>(song, opt);
-        File.WriteAllText(@"output\songdata.json", songjson);
+
+        string newsongjson = JsonSerializer.Serialize<SongData>(song, opt);
+        File.WriteAllText(@"output\songdata.json", newsongjson);
     }
-
-    //WordData
-    bool isWord_OG = File.Exists("worddata_og.json");
-    bool isWord_PS4AS = File.Exists("wordlist_ps4AS.json");
-    bool isWord_PS4US = File.Exists("wordlist_ps4US.json");
-    bool isWord_PTB = File.Exists("wordlist_ptb.json");
-    bool isWord_NS1 = File.Exists("wordlist_ns1.json");
-    bool isWord_MP = File.Exists("worddata_mp.json");
-
-    if (isWord_OG)
+    else if (type == "4")
     {
-        WordData word = new();
-        string wordjson;
+        Console.WriteLine("Write the input (OG) worddata.json path: ");
+        string wordpath = Console.ReadLine();
+        wordpath = wordpath.Replace("\"", "");
+        string wordjson = File.ReadAllText(wordpath);
+        WordData word = JsonSerializer.Deserialize<WordData>(wordjson);
 
-        string word_ogjson = File.ReadAllText("worddata_og.json");
-        var word_og = JsonSerializer.Deserialize<WordData>(word_ogjson);
-        word = word_og.RemoveDuplicates();
+        Console.WriteLine("Write the refresh (Extract) worddata.json path: ");
+        string wordpath_new = Console.ReadLine();
+        wordpath_new = wordpath_new.Replace("\"", "");
+        string wordjson_new = File.ReadAllText(wordpath_new);
+        WordData word_new = JsonSerializer.Deserialize<WordData>(wordjson_new);
 
-        if (isWord_PS4AS)
-        {
-            string word_ps4json = File.ReadAllText("wordlist_ps4AS.json");
-            var word_ps4 = JsonSerializer.Deserialize<WordData>(word_ps4json);
-        
-            word = word.Inject(word_ps4);
-        }
+        word = word.Inject(word_new);
 
-        if (isWord_PS4US)
-        {
-            string word_ps4json = File.ReadAllText("wordlist_ps4US.json");
-            var word_ps4 = JsonSerializer.Deserialize<WordData>(word_ps4json);
-
-            word = word.Inject(word_ps4);
-        }
-
-        if (isWord_PTB)
-        {
-            string word_ptbjson = File.ReadAllText("wordlist_ptb.json");
-            var word_ptb = JsonSerializer.Deserialize<WordData>(word_ptbjson);
-
-            word = word.Inject(word_ptb);
-        }
-
-        if (isWord_NS1)
-        {
-            string word_ns1json = File.ReadAllText("wordlist_ns1.json");
-            var word_ns1 = JsonSerializer.Deserialize<WordData>(word_ns1json);
-
-            word = word.Inject(word_ns1);
-        }
-
-        if (isWord_MP)
-        {
-            string word_mpjson = File.ReadAllText("worddata_mp.json");
-            var word_mp = JsonSerializer.Deserialize<WordData>(word_mpjson);
-
-            word = word.Inject(word_mp);
-        }
-
-        wordjson = JsonSerializer.Serialize<WordData>(word, opt);
-        File.WriteAllText(@"output\worddata.json", wordjson);
+        string newwordjson = JsonSerializer.Serialize<WordData>(word, opt);
+        File.WriteAllText(@"output\worddata.json", newwordjson);
     }
-} catch (Exception ex)
+    else
+    {
+        Console.WriteLine("Option typed wrong: " + type);
+    }
+}
+catch (Exception ex)
 {
     Console.WriteLine("Unknown error:\n" + ex);
 }
+
+Console.WriteLine("Press any key to exit.");
+Console.ReadKey();

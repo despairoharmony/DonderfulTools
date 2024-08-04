@@ -65,11 +65,12 @@ try
         songdatajson = JsonSerializer.Serialize<SongData>(songs, opt);
         Unity3D.WriteJSONData("songdata", songdatajson);
         Console.WriteLine(@"DLC Injection done, file saved at: output\songdata.unity3d" + "\n");
+
+        File.Delete("songdata.unity3d");
+        File.Delete("musicdata.unity3d");
     }
 
     Directory.Delete("temp", true);
-    File.Delete("songdata.unity3d");
-    File.Delete("musicdata.unity3d");
 } catch (Exception ex)
 {
     Console.WriteLine("Unknown error:\n" + ex);
