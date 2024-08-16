@@ -19,6 +19,7 @@ try
     Console.WriteLine("2 - Inject musicdata to Ultramix");
     Console.WriteLine("3 - Inject songdata to Ultramix");
     Console.WriteLine("4 - Inject worddata to Ultramix");
+    Console.WriteLine("5 - Musicdata: Update Only ShinUti");
 
     Console.Write("Choose a option: ");
     string type = Console.ReadLine();
@@ -150,6 +151,38 @@ try
 
         string newwordjson = JsonSerializer.Serialize<WordData>(word, opt);
         File.WriteAllText(@"output\worddata.json", newwordjson);
+    }
+    else if (type == "5")
+    {
+        Console.WriteLine("Write the input musicdata.json path: ");
+        string musicpath = Console.ReadLine();
+        musicpath = musicpath.Replace("\"", "");
+        string musicjson = File.ReadAllText(musicpath);
+        MusicData music = JsonSerializer.Deserialize<MusicData>(musicjson);
+
+        bool next = true;
+
+        while (next)
+        {
+            Console.WriteLine("Write the ShinUti reference musicdata.json path: ");
+            string musicpath_new = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(musicpath_new))
+            {
+                next = false;
+                break;
+            }
+
+            musicpath_new = musicpath_new.Replace("\"", "");
+            string musicjson_new = File.ReadAllText(musicpath_new);
+            MusicData music_new = JsonSerializer.Deserialize<MusicData>(musicjson_new);
+
+            music = music.InjectShinUti(music_new);
+        }
+
+        music.items = music.items.OrderBy(x => x.uniqueId).ToList();
+        string newmusicjson = JsonSerializer.Serialize<MusicData>(music, opt);
+        File.WriteAllText(@"output\musicdata.json", newmusicjson);
     }
     else
     {

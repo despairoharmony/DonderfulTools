@@ -42,20 +42,8 @@ namespace DonderfulUltramixUpdater.Inject
 
             return input;
         }
-        private static MusicItens Update_Game(this MusicItens input, MusicItens refresh)
+        private static MusicItens Update_ShinUti(this MusicItens input, MusicItens refresh)
         {
-            input.branchEasy = refresh.branchEasy;
-            input.branchNormal = refresh.branchNormal;
-            input.branchHard = refresh.branchHard;
-            input.branchMania = refresh.branchMania;
-            input.branchUra = refresh.branchUra;
-
-            input.starEasy = refresh.starEasy;
-            input.starNormal = refresh.starNormal;
-            input.starHard = refresh.starHard;
-            input.starMania = refresh.starMania;
-            input.starUra = refresh.starUra;
-
             input.shinutiEasy = refresh.shinutiEasy;
             input.shinutiNormal = refresh.shinutiNormal;
             input.shinutiHard = refresh.shinutiHard;
@@ -71,22 +59,7 @@ namespace DonderfulUltramixUpdater.Inject
             return input;
         }
 
-        private static MusicItens Update_AC(this MusicItens input, MusicItens refresh)
-        {
-            input.shinutiEasy = refresh.shinutiEasy;
-            input.shinutiNormal = refresh.shinutiNormal;
-            input.shinutiHard = refresh.shinutiHard;
-            input.shinutiMania = refresh.shinutiMania;
-
-            input.shinutiEasyDuet = refresh.shinutiEasyDuet;
-            input.shinutiNormalDuet = refresh.shinutiNormalDuet;
-            input.shinutiHardDuet = refresh.shinutiHardDuet;
-            input.shinutiManiaDuet = refresh.shinutiManiaDuet;
-
-            return input;
-        }
-
-        private static MusicItens Update_ACUra(this MusicItens input, MusicItens refresh)
+        private static MusicItens Update_ShinUtiUraOnly(this MusicItens input, MusicItens refresh)
         {
             input.shinutiUra = refresh.shinutiMania;
             input.shinutiUraDuet = refresh.shinutiManiaDuet;
@@ -125,28 +98,12 @@ namespace DonderfulUltramixUpdater.Inject
                 {
                     if (input.items[i].id == item.id)
                     {
-                        input.items[i] = input.items[i].Update_Game(item);
+                        input.items[i] = input.items[i].Update_ShinUti(item);
                         break;
                     }
-                }
-            }
-
-            return input;
-        }
-
-        public static MusicData InjectShinUti_AC(this MusicData input, MusicData refresh)
-        {
-            foreach (var item in refresh.items)
-            {
-                for (int i = 0; i < input.items.Count; i++)
-                {
-                    if (input.items[i].id == item.id)
+                    else if (input.items[i].id == item.id.Replace("ex_", ""))
                     {
-                        input.items[i] = input.items[i].Update_AC(item);
-                        break;
-                    } else if (input.items[i].id == item.id.Replace("ex_",""))
-                    {
-                        input.items[i] = input.items[i].Update_ACUra(item);
+                        input.items[i] = input.items[i].Update_ShinUtiUraOnly(item);
                         break;
                     }
                 }
